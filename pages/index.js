@@ -1,7 +1,7 @@
 import { Navbar } from '@/components';
 
 const Home = () => (
-	<div className='bg-[#141416] overflow-hidden'>
+	<div className='bg-[#141416]'>
 		<Navbar />
 	</div>
 );
