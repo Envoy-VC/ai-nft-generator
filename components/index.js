@@ -1,3 +1,5 @@
 import Navbar from './Navbar';
+import NFTCard from './NFTCard';
+import Spinner from './Spinner';
 
-export { Navbar };
+export { Navbar, NFTCard, Spinner };

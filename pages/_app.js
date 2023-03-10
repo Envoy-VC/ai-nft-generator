@@ -7,6 +7,8 @@ import { configureChains, createClient, WagmiConfig } from 'wagmi';
 import { polygonMumbai } from 'wagmi/chains';
 import { publicProvider } from 'wagmi/providers/public';
 
+import { GlobalContextProvider } from '@/context';
+
 const { chains, provider } = configureChains(
 	[polygonMumbai],
 	[publicProvider()]
@@ -25,7 +27,9 @@ export default function App({ Component, pageProps }) {
 	return (
 		<WagmiConfig client={wagmiClient}>
 			<RainbowKitProvider chains={chains}>
-				<Component {...pageProps} />
+				<GlobalContextProvider>
+					<Component {...pageProps} />
+				</GlobalContextProvider>
 			</RainbowKitProvider>
 		</WagmiConfig>
 	);

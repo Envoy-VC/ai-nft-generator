@@ -1,8 +1,13 @@
 import { Navbar } from '@/components';
+import { Hero, RecentNFTs, Footer, Generate } from '@/sections';
 
 const Home = () => (
-	<div className='bg-[#141416]'>
+	<div className='bg-white'>
 		<Navbar />
+		<Hero />
+		<Generate />
+		<RecentNFTs />
+		<Footer />
 	</div>
 );
 

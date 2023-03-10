@@ -3,10 +3,20 @@
 @tailwind utilities;
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+@font-face {
+	font-family: 'Unicorn';
+	src: url('../assets/unicorn.ttf');
+}
 
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 	scroll-behavior: smooth;
+}
+
+.unicorn-text {
+	background: linear-gradient(to right, #18b6ff, #fe68c9, #fe68c9);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
 }
