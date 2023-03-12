@@ -1,9 +1,12 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+
 import {
 	useAccount,
 	useContractRead,
 	useContractWrite,
 	usePrepareContractWrite,
+	useWaitForTransaction,
 } from 'wagmi';
 import { Web3Storage } from 'web3.storage';
 
@@ -13,6 +16,7 @@ const GlobalContext = createContext();
 
 export const GlobalContextProvider = ({ children }) => {
 	const { address } = useAccount();
+	const [minting, setMinting] = useState(false);
 
 	const { data: tokenId } = useContractRead({
 		address: CONTRACT_ADDRESS,
@@ -24,20 +28,73 @@ export const GlobalContextProvider = ({ children }) => {
 		address: CONTRACT_ADDRESS,
 		abi: ABI,
 		functionName: 'safeMint',
+		args: [address, ''],
 	});
 
-	const { write } = useContractWrite(config);
+	const { write, data } = useContractWrite({
+		...config,
+		mode: 'recklesslyUnprepared',
+		onError() {
+			setMinting(false);
+		},
+	});
 
-	const mint = async (hash) => {
-		await write({ recklesslySetUnpreparedArgs: [address, hash] });
+	const waitForTransaction = useWaitForTransaction({
+		hash: data?.hash,
+		onSuccess() {
+			const id = tokenId;
+			toast(<Msg id={id} />, props);
+		},
+		onSettled() {
+			setMinting(false);
+		},
+	});
+
+	const Msg = ({ toastProps, id }) => (
+		<div>
+			<p>🦄 Success</p>
+			<p>
+				View on{' '}
+				<a
+					href={`https://testnets.opensea.io/assets/mumbai/${CONTRACT_ADDRESS}/${
+						parseInt(id, 16) - 1
+					}`}
+					target='_blank'
+					rel='noreferrer'
+				>
+					<span className='text-[#3445DD] hover:underline underline-offset-2'>
+						OpenSea
+					</span>
+				</a>
+			</p>
+		</div>
+	);
+
+	const props = {
+		type: toast.TYPE.SUCCESS,
+		position: toast.POSITION.BOTTOM_LEFT,
+	};
+
+	const mint = async (form) => {
+		try {
+			setMinting(true);
+			const res = await generateMetadata(form);
+			const hash = await uploadMetadata(res.metadata);
+			const ipfsHash = 'ipfs://' + String(hash) + `/${res.id}.json`;
+			await write({
+				recklesslySetUnpreparedArgs: [address, ipfsHash],
+			});
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	const generateMetadata = async (form) => {
-		const tokenID = await tokenId.data;
+		const tokenID = await tokenId;
 		const metadata = {
 			name: `Unicorn #${tokenID}`,
 			description: form.prompt,
-			image_data: form.image,
+			image: form.image,
 			attributes: [
 				{
 					display_type: 'date',
@@ -46,7 +103,7 @@ export const GlobalContextProvider = ({ children }) => {
 				},
 			],
 		};
-		return metadata;
+		return { metadata: metadata, id: parseInt(tokenID, 16) };
 	};
 
 	function makeStorageClient() {
@@ -58,7 +115,8 @@ export const GlobalContextProvider = ({ children }) => {
 	const uploadMetadata = async (metadata) => {
 		const client = makeStorageClient();
 		const buffer = Buffer.from(JSON.stringify(metadata));
-		const file = [new File([buffer], `${Number(tokenId) + 1}.json`)];
+		const tokenID = await tokenId;
+		const file = [new File([buffer], `${parseInt(tokenID, 16)}.json`)];
 		const cid = await client.put(file);
 		console.log('stored files with cid:', cid);
 		return cid;
@@ -67,13 +125,12 @@ export const GlobalContextProvider = ({ children }) => {
 	return (
 		<GlobalContext.Provider
 			value={{
-				address,
-				generateMetadata,
-				uploadMetadata,
 				mint,
+				minting,
 			}}
 		>
 			{children}
+			<ToastContainer />
 		</GlobalContext.Provider>
 	);
 };
