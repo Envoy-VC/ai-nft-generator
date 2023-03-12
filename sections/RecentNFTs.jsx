@@ -14,10 +14,8 @@ const RecentNFTs = () => (
 			<NFTCard />
 			<NFTCard />
 			<NFTCard />
-			<NFTCard />
 		</div>
 		<div className='flex flex-row grow-0 shrink-0 basis-auto items-center z-1 animate-marquee_right'>
-			<NFTCard />
 			<NFTCard />
 			<NFTCard />
 			<NFTCard />

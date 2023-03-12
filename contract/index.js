@@ -1,5 +1,5 @@
 export const CONTRACT_ADDRESS = '0x50c80C062594FfE45a5F602a543Ef5110Ae90cd7';
-export const DOMAIN = 'http://localhost:3000';
+export const DOMAIN = 'localhost:3000';
 export const ABI = [
 	{
 		inputs: [],

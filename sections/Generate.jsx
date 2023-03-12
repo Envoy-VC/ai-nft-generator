@@ -11,11 +11,9 @@ const Generate = () => {
 	const { mint, minting } = useGlobalContext();
 	const [generating, setGenerating] = useState(false);
 	const [form, setForm] = useState({
-		name: 'Unicorn',
 		prompt: '',
 		image: '',
 	});
-	const url = `${DOMAIN}/api/generate_image`;
 
 	const handleFormFieldChange = (e, fieldName) => {
 		setForm({ ...form, [fieldName]: e.target.value });
@@ -26,11 +24,14 @@ const Generate = () => {
 		if (form.prompt) {
 			try {
 				setGenerating(true);
-				const response = await fetch(url, {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ prompt: form.prompt }),
-				});
+				const response = await fetch(
+					'http://localhost:3000/api/generate_image',
+					{
+						method: 'POST',
+						headers: { 'Content-Type': 'application/json' },
+						body: JSON.stringify({ prompt: form.prompt }),
+					}
+				);
 				const data = await response.json();
 				setForm({ ...form, image: `data:image/jpeg;base64,${data.photo}` });
 				console.log(form.image);
@@ -75,30 +76,17 @@ const Generate = () => {
 						)}
 					</div>
 
-					<div className='flex-grow rounded-lg bg-white p-8 shadow-xl'>
+					<div className='flex-grow rounded-lg bg-white p-8 box-shadow'>
 						<form onSubmit={handleSubmit} className='space-y-4'>
-							<div className='flex flex-grow'>
-								<label className='sr-only' htmlFor='name'>
-									Name your Unicorn
-								</label>
-								<input
-									className=' w-full rounded-lg p-3 outline-none text-md font-poppins border-gray-200 shadow-sm'
-									placeholder='Name your Unicorn'
-									type='text'
-									id='name'
-									onChange={(e) => handleFormFieldChange(e, 'name')}
-								/>
-							</div>
-
 							<div>
 								<label className='sr-only' htmlFor='prompt'>
 									Prompt
 								</label>
 
 								<textarea
-									className='w-full rounded-lg p-3 text-md font-poppins outline-none border-gray-200 shadow-sm'
-									placeholder='A Unicorn is in a fantasy world, with wings and a horn. It is flying over a rainbow.'
-									rows='8'
+									className='w-full rounded-lg p-3 text-md font-poppins outline-none border-gray-200 bg-[#F3F4F6]'
+									placeholder={`A Unicorn is in a fantasy world, with wings and a horn. It is flying over a rainbow.\n\n(or)\n\nJust Describe how the unicorn or Background looks like.eg - \n\nUnicorn is in a fantasy world, with wings and a horn. It is flying over a rainbow.`}
+									rows='10'
 									id='message'
 									onChange={(e) => handleFormFieldChange(e, 'prompt')}
 								></textarea>
