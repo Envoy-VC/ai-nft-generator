@@ -15,8 +15,24 @@ import { CONTRACT_ADDRESS, ABI } from '../contract';
 const GlobalContext = createContext();
 
 export const GlobalContextProvider = ({ children }) => {
-	const { address } = useAccount();
+	const { address, isDisconnected } = useAccount();
 	const [minting, setMinting] = useState(false);
+
+	const checks = (form) => {
+		if (!address || isDisconnected) {
+			toast.error('Please connect your wallet');
+			setMinting(false);
+			throw new Error('Please connect your wallet');
+		} else if (form.image === '') {
+			toast.error('Error: No Image Generated');
+			setMinting(false);
+			throw new Error('Error: No Image Generated');
+		} else if (form.prompt === '') {
+			toast.error('Error No Prompt');
+			setMinting(false);
+			throw new Error('Error No Prompt');
+		}
+	};
 
 	const { data: tokenId } = useContractRead({
 		address: CONTRACT_ADDRESS,
@@ -78,6 +94,7 @@ export const GlobalContextProvider = ({ children }) => {
 	const mint = async (form) => {
 		try {
 			setMinting(true);
+			checks(form);
 			const res = await generateMetadata(form);
 			const hash = await uploadMetadata(res.metadata);
 			const ipfsHash = 'ipfs://' + String(hash) + `/${res.id}.json`;
@@ -130,7 +147,6 @@ export const GlobalContextProvider = ({ children }) => {
 			}}
 		>
 			{children}
-			<ToastContainer />
 		</GlobalContext.Provider>
 	);
 };

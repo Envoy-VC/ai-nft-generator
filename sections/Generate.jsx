@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Image from 'next/image';
 import nft from '../assets/nft.png';
 import { Spinner } from '@/components';
+import { DOMAIN } from '@/contract';
 import { useGlobalContext } from '@/context';
 
 const Generate = () => {
@@ -11,10 +12,10 @@ const Generate = () => {
 	const [generating, setGenerating] = useState(false);
 	const [form, setForm] = useState({
 		name: 'Unicorn',
-		prompt:
-			'A Unicorn is in a fantasy world, with wings and a horn. It is flying over a rainbow.',
+		prompt: '',
 		image: '',
 	});
+	const url = `${DOMAIN}/api/generate_image`;
 
 	const handleFormFieldChange = (e, fieldName) => {
 		setForm({ ...form, [fieldName]: e.target.value });
@@ -25,14 +26,11 @@ const Generate = () => {
 		if (form.prompt) {
 			try {
 				setGenerating(true);
-				const response = await fetch(
-					'http://localhost:3000/api/generate_image',
-					{
-						method: 'POST',
-						headers: { 'Content-Type': 'application/json' },
-						body: JSON.stringify({ prompt: form.prompt }),
-					}
-				);
+				const response = await fetch(url, {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ prompt: form.prompt }),
+				});
 				const data = await response.json();
 				setForm({ ...form, image: `data:image/jpeg;base64,${data.photo}` });
 				console.log(form.image);
@@ -42,7 +40,7 @@ const Generate = () => {
 				setGenerating(false);
 			}
 		} else {
-			alert('Please enter a prompt');
+			toast.error('Error: No Prompt');
 		}
 	};
 
@@ -148,7 +146,7 @@ const Generate = () => {
 					</div>
 				</div>
 			</div>
-			<ToastContainer />
+			<ToastContainer position='bottom-left' />
 		</section>
 	);
 };
