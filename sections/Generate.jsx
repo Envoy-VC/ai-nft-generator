@@ -50,12 +50,15 @@ const Generate = () => {
 	};
 
 	return (
-		<section className='mt-36' id='mint-nft'>
-			<div className='text-[64px] text-[#EA5F7D] font-unicorn font-bold text-center pb-16'>
+		<section
+			className='flex flex-col mt-36 max-w-screen-2xl mx-auto'
+			id='mint-nft'
+		>
+			<div className='text-center text-[64px] text-[#EA5F7D] font-unicorn font-bold pb-16 '>
 				Mint Your Unicorn
 			</div>
-			<div className='mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8'>
-				<div className='flex flex-col sm:flex-row justify-center sm:space-x-16 space-y-16 sm:space-y-0'>
+			<div className='flex w-full justify-center px-4 py-16 sm:px-6 lg:px-8'>
+				<div className='flex flex-col sm:flex-row w-full justify-center sm:space-x-16 space-y-16 sm:space-y-0'>
 					<div>
 						{form.image ? (
 							<Image
