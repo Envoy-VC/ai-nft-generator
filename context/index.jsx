@@ -23,7 +23,7 @@ export const GlobalContextProvider = ({ children }) => {
 			toast.error('Please connect your wallet');
 			setMinting(false);
 			throw new Error('Please connect your wallet');
-		} else if (form.image === '') {
+		} else if (form.image_data === '') {
 			toast.error('Error: No Image Generated');
 			setMinting(false);
 			throw new Error('Error: No Image Generated');
@@ -57,8 +57,8 @@ export const GlobalContextProvider = ({ children }) => {
 
 	const waitForTransaction = useWaitForTransaction({
 		hash: data?.hash,
-		onSuccess() {
-			const id = tokenId;
+		async onSuccess() {
+			const id = await tokenId;
 			toast(<Msg id={id} />, props);
 		},
 		onSettled() {
@@ -72,9 +72,10 @@ export const GlobalContextProvider = ({ children }) => {
 			<p>
 				View on{' '}
 				<a
-					href={`https://testnets.opensea.io/assets/mumbai/${CONTRACT_ADDRESS}/${
-						parseInt(id, 16) - 1
-					}`}
+					href={`https://testnets.opensea.io/assets/mumbai/${CONTRACT_ADDRESS}/${parseInt(
+						id,
+						16
+					)}`}
 					target='_blank'
 					rel='noreferrer'
 				>
@@ -95,7 +96,8 @@ export const GlobalContextProvider = ({ children }) => {
 		try {
 			setMinting(true);
 			checks(form);
-			const res = await generateMetadata(form);
+			const imageHash = await uploadImage(form);
+			const res = await generateMetadata(form, imageHash);
 			const hash = await uploadMetadata(res.metadata);
 			const ipfsHash = 'ipfs://' + String(hash) + `/${res.id}.json`;
 			await write({
@@ -106,12 +108,13 @@ export const GlobalContextProvider = ({ children }) => {
 		}
 	};
 
-	const generateMetadata = async (form) => {
+	const generateMetadata = async (form, imageHash) => {
 		const tokenID = await tokenId;
+		const image = `ipfs://${imageHash}/${parseInt(tokenID, 16)}.jpg`;
 		const metadata = {
 			name: `Unicorn #${tokenID}`,
 			description: form.prompt,
-			image: form.image,
+			image: image,
 			attributes: [
 				{
 					display_type: 'date',
@@ -129,6 +132,20 @@ export const GlobalContextProvider = ({ children }) => {
 		});
 	}
 
+	const uploadImage = async (form) => {
+		const tokenID = await tokenId;
+		const client = makeStorageClient();
+		const res = await fetch(form.image_data);
+		const blob = await res.blob();
+		const image = [
+			new File([blob], `${parseInt(tokenID, 16)}.jpg`, {
+				type: 'image/jpeg',
+			}),
+		];
+		const imageCid = await client.put(image);
+		return imageCid;
+	};
+
 	const uploadMetadata = async (metadata) => {
 		const client = makeStorageClient();
 		const buffer = Buffer.from(JSON.stringify(metadata));
@@ -144,6 +161,7 @@ export const GlobalContextProvider = ({ children }) => {
 			value={{
 				mint,
 				minting,
+				tokenId,
 			}}
 		>
 			{children}

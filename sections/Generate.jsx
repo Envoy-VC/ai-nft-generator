@@ -12,7 +12,7 @@ const Generate = () => {
 	const [generating, setGenerating] = useState(false);
 	const [form, setForm] = useState({
 		prompt: '',
-		image: '',
+		image_data: '',
 	});
 
 	const handleFormFieldChange = (e, fieldName) => {
@@ -33,8 +33,11 @@ const Generate = () => {
 					}
 				);
 				const data = await response.json();
-				setForm({ ...form, image: `data:image/jpeg;base64,${data.photo}` });
-				console.log(form.image);
+				setForm({
+					...form,
+					image_data: `data:image/jpeg;base64,${data.photo}`,
+				});
+				console.log(form.image_data);
 			} catch (error) {
 				console.log(error);
 			} finally {
@@ -60,9 +63,9 @@ const Generate = () => {
 			<div className='flex w-full justify-center px-4 py-16 sm:px-6 lg:px-8'>
 				<div className='flex flex-col sm:flex-row w-full justify-center sm:space-x-16 space-y-16 sm:space-y-0'>
 					<div>
-						{form.image ? (
+						{form.image_data ? (
 							<Image
-								src={form.image}
+								src={form.image_data}
 								alt='Unicorn NFT'
 								className='rounded-xl'
 								width={512}
