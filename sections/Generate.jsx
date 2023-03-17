@@ -25,7 +25,7 @@ const Generate = () => {
 			try {
 				setGenerating(true);
 				const response = await fetch(
-					'http://localhost:3000/api/generate_image',
+					'https://ai-nft-generator-three.vercel.app/api/generate_image',
 					{
 						method: 'POST',
 						headers: { 'Content-Type': 'application/json' },
