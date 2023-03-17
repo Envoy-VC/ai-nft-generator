@@ -28,7 +28,7 @@ const RecentNFTs = () => {
 			};
 			const alchemy = new Alchemy(settings);
 			const metadata = await alchemy.nft.getNftMetadataBatch(NFTs, {
-				refreshCache: true,
+				refreshCache: false,
 			});
 			setNFTs(metadata);
 		};

@@ -13,7 +13,7 @@ const NFTCard = ({ metadata }) => (
 
 		<div className='relative p-4 sm:p-6 lg:p-8'>
 			<div className='mt-32 sm:mt-48 lg:mt-64'>
-				<div className='translate-y-8 transform opacity-0 transition-all group-hover:-translate-y-16 group-hover:opacity-100'>
+				<div className='translate-y-8 transform opacity-0 transition-all group-hover:-translate-y-[200px] group-hover:opacity-100'>
 					<p className='text-xl text-black font-poppins font-medium'>
 						{metadata.description}
 					</p>
