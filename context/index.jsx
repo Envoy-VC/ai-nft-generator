@@ -38,6 +38,7 @@ export const GlobalContextProvider = ({ children }) => {
 		address: CONTRACT_ADDRESS,
 		abi: ABI,
 		functionName: '_tokenIdCounter',
+		watch: true,
 	});
 
 	const { config } = usePrepareContractWrite({
@@ -66,26 +67,29 @@ export const GlobalContextProvider = ({ children }) => {
 		},
 	});
 
-	const Msg = ({ toastProps, id }) => (
-		<div>
-			<p>🦄 Success</p>
-			<p>
-				View on{' '}
-				<a
-					href={`https://testnets.opensea.io/assets/mumbai/${CONTRACT_ADDRESS}/${parseInt(
-						id,
-						16
-					)}`}
-					target='_blank'
-					rel='noreferrer'
-				>
-					<span className='text-[#3445DD] hover:underline underline-offset-2'>
-						OpenSea
-					</span>
-				</a>
-			</p>
-		</div>
-	);
+	const Msg = ({ toastProps, id }) => {
+		const tokenID = tokenId;
+		return (
+			<div>
+				<p>🦄 Success</p>
+				<p>
+					View on{' '}
+					<a
+						href={`https://testnets.opensea.io/assets/mumbai/${CONTRACT_ADDRESS}/${parseInt(
+							tokenID,
+							16
+						)}`}
+						target='_blank'
+						rel='noreferrer'
+					>
+						<span className='text-[#3445DD] hover:underline underline-offset-2'>
+							OpenSea
+						</span>
+					</a>
+				</p>
+			</div>
+		);
+	};
 
 	const props = {
 		type: toast.TYPE.SUCCESS,
@@ -99,7 +103,7 @@ export const GlobalContextProvider = ({ children }) => {
 			const imageHash = await uploadImage(form);
 			const res = await generateMetadata(form, imageHash);
 			const hash = await uploadMetadata(res.metadata);
-			const ipfsHash = 'ipfs://' + String(hash) + `/${res.id}.json`;
+			const ipfsHash = 'ipfs://' + String(hash) + '/metadata.json';
 			await write({
 				recklesslySetUnpreparedArgs: [address, ipfsHash],
 			});
@@ -110,7 +114,7 @@ export const GlobalContextProvider = ({ children }) => {
 
 	const generateMetadata = async (form, imageHash) => {
 		const tokenID = await tokenId;
-		const image = `ipfs://${imageHash}/${parseInt(tokenID, 16)}.jpg`;
+		const image = `ipfs://${imageHash}/image.jpg`;
 		const metadata = {
 			name: `Unicorn #${tokenID}`,
 			description: form.prompt,

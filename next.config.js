@@ -2,7 +2,7 @@
 const nextConfig = {
 	reactStrictMode: true,
 	images: {
-		domains: ['nft-cdn.alchemy.com'],
+		domains: ['nft-cdn.alchemy.com', 'ipfs.io'],
 	},
 };
 

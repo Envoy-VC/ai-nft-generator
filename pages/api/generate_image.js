@@ -18,7 +18,7 @@ export default async function handler(req, res) {
 	if (req.method === 'POST') {
 		try {
 			const prompt = req.body.prompt;
-			const chat = `just write a create a DALL-E prompt in less than 40 words for an digital art of a unicorn, detailed and having vivid colors, here is some information about the background and unicorn - "${prompt}"`;
+			const chat = `just create a prompt in less than 40 words for an digital illustration of a unicorn, 4k, detailed and fantasy  here is some information about the background and unicorn - "${prompt}"`;
 
 			const gptPrompt = await openai.createChatCompletion({
 				model: 'gpt-3.5-turbo',
