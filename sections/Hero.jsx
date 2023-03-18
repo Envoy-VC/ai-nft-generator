@@ -1,5 +1,8 @@
 'use client';
 
+import Image from 'next/image';
+import hero from '../assets/hero.jpg';
+
 const Hero = () => (
 	<section className='pt-24 bg-white'>
 		<div className='px-12 mx-auto max-w-7xl'>
@@ -46,7 +49,7 @@ const Hero = () => (
 								<div className='w-3 h-3 border-2 border-white rounded-full'></div>
 							</div>
 						</div>
-						<img src='https://cdn.devdojo.com/images/march2021/green-dashboard.jpg' />
+						<Image src={hero} alt='hero' />
 					</div>
 				</div>
 			</div>

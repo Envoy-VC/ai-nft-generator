@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import nft from '../assets/nft.png';
+import nft from '../assets/nft.jpg';
 
 const NFTCard = ({ metadata }) => (
 	<a className='min-w-[350px] h-[350px] relative block group rounded-xl mx-4 my-4'>

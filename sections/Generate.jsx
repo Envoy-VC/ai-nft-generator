@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Image from 'next/image';
-import nft from '../assets/nft.png';
+import nft from '../assets/nft.jpg';
 import { Spinner } from '@/components';
 import { DOMAIN } from '@/contract';
 import { useGlobalContext } from '@/context';
@@ -91,7 +91,7 @@ const Generate = () => {
 
 								<textarea
 									className='w-full rounded-lg p-3 text-md font-poppins outline-none border-gray-200 bg-[#F3F4F6]'
-									placeholder={`A Unicorn is in a fantasy world, with wings and a horn. It is flying over a rainbow.\n\n(or)\n\nJust Describe how the unicorn or Background looks like.eg - \n\nUnicorn is in a fantasy world, with wings and a horn. It is flying over a rainbow.`}
+									placeholder={`Cute baby unicorn with big, expressive eyes, sitting in a field of flowers\n\n(or)\n\nJust Describe how the unicorn or Background looks like.eg - \n\nUnicorn is in a fantasy world, with wings and a horn. It is flying over a rainbow.`}
 									rows='10'
 									id='message'
 									onChange={(e) => handleFormFieldChange(e, 'prompt')}
