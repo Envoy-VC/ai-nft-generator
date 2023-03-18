@@ -75,10 +75,7 @@ export const GlobalContextProvider = ({ children }) => {
 				<p>
 					View on{' '}
 					<a
-						href={`https://testnets.opensea.io/assets/mumbai/${CONTRACT_ADDRESS}/${parseInt(
-							tokenID,
-							16
-						)}`}
+						href={`https://testnets.opensea.io/assets/mumbai/${CONTRACT_ADDRESS}/${tokenID.toString()}`}
 						target='_blank'
 						rel='noreferrer'
 					>
@@ -142,7 +139,7 @@ export const GlobalContextProvider = ({ children }) => {
 		const res = await fetch(form.image_data);
 		const blob = await res.blob();
 		const image = [
-			new File([blob], `${parseInt(tokenID, 16)}.jpg`, {
+			new File([blob], 'image.jpg', {
 				type: 'image/jpeg',
 			}),
 		];
@@ -154,7 +151,7 @@ export const GlobalContextProvider = ({ children }) => {
 		const client = makeStorageClient();
 		const buffer = Buffer.from(JSON.stringify(metadata));
 		const tokenID = await tokenId;
-		const file = [new File([buffer], `${parseInt(tokenID, 16)}.json`)];
+		const file = [new File([buffer], 'metadata.json')];
 		const cid = await client.put(file);
 		console.log('stored files with cid:', cid);
 		return cid;

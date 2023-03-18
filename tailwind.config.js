@@ -13,7 +13,7 @@ module.exports = {
 		extend: {
 			animation: {
 				marquee_left: 'marquee_left 100s linear infinite',
-				marquee_right: 'marquee_right 100s linear infinite',
+				marquee_right: 'marquee_right 200s linear infinite',
 			},
 			keyframes: {
 				marquee_left: {

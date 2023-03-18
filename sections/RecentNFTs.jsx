@@ -15,7 +15,7 @@ const RecentNFTs = () => {
 			const tokenID = await tokenId;
 			const NFTs = [];
 			for (let i = 0; i < count; i++) {
-				const id = String(tokenID.toString() - count + i - 1);
+				const id = String(tokenID.toString() - count + i - 3);
 				NFTs.push({
 					contractAddress: CONTRACT_ADDRESS,
 					tokenId: id,
